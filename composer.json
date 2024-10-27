@@ -1,0 +1,15 @@
+{
+    "name": "link1515/job-notification",
+    "autoload": {
+        "psr-4": {
+            "Link1515\\JobNotification\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Link1515",
+            "email": "h26281660@gmail.com"
+        }
+    ],
+    "require": {}
+}
