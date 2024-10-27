@@ -25,4 +25,11 @@ class JobService
 
         return $response;
     }
+
+    public static function fetchJobsByUrl(string $url): array
+    {
+        $response = HttpUtils::getJson($url, [], self::HEADERS);
+
+        return $response;
+    }
 }
