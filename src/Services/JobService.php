@@ -3,7 +3,7 @@
 namespace Link1515\JobNotification\Services;
 
 use Link1515\JobNotification\Utils\HttpUtils;
-use Link1515\JobNotification\Utils\StringUrils;
+use Link1515\JobNotification\Utils\StringUtils;
 
 class JobService
 {
@@ -63,7 +63,7 @@ class JobService
 
         $jobs = array_filter($jobs, function ($job) use ($needles) {
             $jobName = strtolower($job['jobName']);
-            return StringUrils::stringContainAny($jobName, $needles);
+            return StringUtils::stringContainAny($jobName, $needles);
         });
     }
 }

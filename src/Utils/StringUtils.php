@@ -2,7 +2,7 @@
 
 namespace Link1515\JobNotification\Utils;
 
-class StringUrils
+class StringUtils
 {
     public static function stringContain(string $string, string $needle): string
     {
