@@ -6,4 +6,4 @@ use Link1515\JobNotification\Services\JobService;
 
 $data = JobService::fetchRemoteJobsByKeyword('全端 前端 後端 軟體');
 
-echo count($data);
+echo json_encode($data);

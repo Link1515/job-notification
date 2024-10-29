@@ -44,7 +44,9 @@ class JobService
 
         $response = HttpUtils::getJson(self::URL, $queryParams, self::HEADERS);
         $jobs     = $response['data'];
+
         self::filterEngineerJobs($jobs);
+        self::filterRemoteJobs($jobs);
 
         return $jobs;
     }
@@ -62,6 +64,15 @@ class JobService
         $needles = ['前端', '後端', '軟體', '工程師', 'frontend', 'backend', 'software', 'engineer', 'developer'];
 
         $jobs = array_filter($jobs, function ($job) use ($needles) {
+            $jobName = strtolower($job['jobName']);
+            return StringUtils::stringContainAny($jobName, $needles);
+        });
+    }
+
+    private static function filterRemoteJobs(array &$jobs): void
+    {
+        $needles = ['遠端', '遠距', '居家', 'remote', 'wfh'];
+        $jobs    = array_filter($jobs, function ($job) use ($needles) {
             $jobName = strtolower($job['jobName']);
             return StringUtils::stringContainAny($jobName, $needles);
         });
