@@ -48,7 +48,7 @@ class JobService
         self::filterEngineerJobs($jobs);
         self::filterRemoteJobs($jobs);
 
-        return $jobs;
+        return array_values($jobs);
     }
 
     public static function fetchJobsByUrl(string $url): array
