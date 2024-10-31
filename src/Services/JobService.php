@@ -7,8 +7,9 @@ use Link1515\JobNotification\Utils\StringUtils;
 
 class JobService
 {
-    public const URL     = 'https://www.104.com.tw/jobs/search/api/jobs';
-    public const HEADERS = ['Referer: https://www.104.com.tw/jobs/search/?'];
+    public const LIST_URL    = 'https://www.104.com.tw/jobs/search/api/jobs';
+    public const DETAILS_URL = 'https://www.104.com.tw/job/ajax/content';
+    public const HEADERS     = ['Referer: https://www.104.com.tw'];
 
     public function fetchTaipeiJobsByKeyword(string $keyword): array
     {
@@ -23,7 +24,7 @@ class JobService
             'pagesize'  => 20
         ];
 
-        $response = HttpUtils::getJson(self::URL, $queryParams, self::HEADERS);
+        $response = HttpUtils::getJson(self::LIST_URL, $queryParams, self::HEADERS);
         $jobs     = $response['data'];
 
         return $jobs;
@@ -42,7 +43,7 @@ class JobService
             'searchJobs' => 1
         ];
 
-        $response = HttpUtils::getJson(self::URL, $queryParams, self::HEADERS);
+        $response = HttpUtils::getJson(self::LIST_URL, $queryParams, self::HEADERS);
         $jobs     = $response['data'];
 
         $this->filterEngineerJobs($jobs);
@@ -76,5 +77,13 @@ class JobService
             $jobName = strtolower($job['jobName']);
             return StringUtils::stringContainAny($jobName, $needles);
         });
+    }
+
+    public function fetchJobDetails(string $detailId)
+    {
+        $response = HttpUtils::getJson(self::DETAILS_URL . "/{$detailId}", [], self::HEADERS);
+        $details  = $response['data'];
+
+        return $details;
     }
 }
