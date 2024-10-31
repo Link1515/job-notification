@@ -10,7 +10,7 @@ class JobService
     public const URL     = 'https://www.104.com.tw/jobs/search/api/jobs';
     public const HEADERS = ['Referer: https://www.104.com.tw/jobs/search/?'];
 
-    public static function fetchTaipeiJobsByKeyword(string $keyword): array
+    public function fetchTaipeiJobsByKeyword(string $keyword): array
     {
         $queryParams = [
             'area'      => '6001001000,6001002000',
@@ -29,7 +29,7 @@ class JobService
         return $jobs;
     }
 
-    public static function fetchRemoteJobsByKeyword(string $keyword): array
+    public function fetchRemoteJobsByKeyword(string $keyword): array
     {
         $queryParams = [
             'jobsource'  => 'joblist_search',
@@ -45,13 +45,13 @@ class JobService
         $response = HttpUtils::getJson(self::URL, $queryParams, self::HEADERS);
         $jobs     = $response['data'];
 
-        self::filterEngineerJobs($jobs);
-        self::filterRemoteJobs($jobs);
+        $this->filterEngineerJobs($jobs);
+        $this->filterRemoteJobs($jobs);
 
         return array_values($jobs);
     }
 
-    public static function fetchJobsByUrl(string $url): array
+    public function fetchJobsByUrl(string $url): array
     {
         $response = HttpUtils::getJson($url, [], self::HEADERS);
         $jobs     = $response['data'];
@@ -59,7 +59,7 @@ class JobService
         return $jobs;
     }
 
-    private static function filterEngineerJobs(array &$jobs): void
+    private function filterEngineerJobs(array &$jobs): void
     {
         $needles = ['前端', '後端', '軟體', '工程師', 'frontend', 'backend', 'software', 'engineer', 'developer'];
 
@@ -69,7 +69,7 @@ class JobService
         });
     }
 
-    private static function filterRemoteJobs(array &$jobs): void
+    private function filterRemoteJobs(array &$jobs): void
     {
         $needles = ['遠端', '遠距', '居家', 'remote', 'wfh'];
         $jobs    = array_filter($jobs, function ($job) use ($needles) {

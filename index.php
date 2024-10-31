@@ -7,8 +7,9 @@ use Link1515\JobNotification\entities\Job;
 use Link1515\JobNotification\Repositories\JobRepository;
 use Link1515\JobNotification\Services\JobService;
 
-$data   = JobService::fetchRemoteJobsByKeyword('全端 前端 後端 軟體');
-$jobObj = $data[0];
+$jobService = new JobService();
+$data       = $jobService->fetchRemoteJobsByKeyword('全端 前端 後端 軟體');
+$jobObj     = $data[0];
 
 $jobRepository = new JobRepository(DB::getPDO(), 'jobs');
 
