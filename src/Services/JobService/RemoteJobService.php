@@ -4,7 +4,7 @@ namespace Link1515\JobNotification\Services\JobService;
 
 use Link1515\JobNotification\Utils\StringUtils;
 
-class RemoteJobService extends JobService implements FetchJobByKeywordInterface
+class RemoteJobService extends JobService
 {
     public function fetchJobIdsByKeyword(string $keyword): array
     {

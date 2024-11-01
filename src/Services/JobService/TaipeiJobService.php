@@ -2,7 +2,7 @@
 
 namespace Link1515\JobNotification\Services\JobService;
 
-class TaipeiJobService extends JobService implements FetchJobByKeywordInterface
+class TaipeiJobService extends JobService
 {
     public function fetchJobIdsByKeyword(string $keyword): array
     {
