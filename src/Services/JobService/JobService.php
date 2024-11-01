@@ -44,10 +44,16 @@ abstract class JobService
 
     public function fetchJobDetails(string $jobId)
     {
-        $response = HttpUtils::getJson(self::DETAILS_URL . "/{$jobId}", self::HEADERS);
+        $jobLink  = $this->getJobDetailsLink($jobId);
+        $response = HttpUtils::getJson($jobLink, self::HEADERS);
         $details  = $response['data'];
 
         return $details;
+    }
+
+    public function getJobDetailsLink(string $jobId): string
+    {
+        return self::DETAILS_URL . "/{$jobId}";
     }
 
     protected function filterEngineerJobs(array &$jobs): void
