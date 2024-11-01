@@ -2,7 +2,6 @@
 
 namespace Link1515\JobNotification\Repositories;
 
-use Link1515\JobNotification\Entities\Job;
 use PDO;
 
 class JobRepository
@@ -42,13 +41,33 @@ class JobRepository
         $this->pdo->exec($sql);
     }
 
-    public function insertJobs(array $jobs)
+    public function count(): int
     {
+        $sql    = "SELECT COUNT(*) FROM `{$this->tableName}`";
+        $result = $this->pdo->query($sql);
+        return $result->fetchColumn();
+    }
+
+    public function findNewIds(array $ids): array
+    {
+        $sql        = "SELECT id FROM `{$this->tableName}` WHERE id IN ('" . implode("', '", $ids) . "')";
+        $result     = $this->pdo->query($sql);
+        $existedIds = $result->fetchAll(PDO::FETCH_COLUMN);
+
+        $newIds = array_diff($ids, $existedIds);
+
+        return $newIds;
+    }
+
+    public function insertJobs(array $ids)
+    {
+        if (count($ids) === 0) {
+            return;
+        }
         $sql = "INSERT INTO `{$this->tableName}` (id, created_at) VALUES ";
         $now = new \DateTime();
-        /** @var Job $job */
-        foreach ($jobs as $job) {
-            $sql .= "('{$job->id}', '{$now->format('Y-m-d H:i:s')}'), ";
+        foreach ($ids as $id) {
+            $sql .= "('{$id}', '{$now->format('Y-m-d H:i:s')}'), ";
         }
         $sql = substr($sql, 0, -2);
 
