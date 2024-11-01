@@ -13,7 +13,7 @@ class JobService
 
     public function fetchJobsByUrl(string $url): array
     {
-        $response = HttpUtils::getJson($url, [], self::HEADERS);
+        $response = HttpUtils::getJson($url, self::HEADERS);
         $jobs     = $response['data'];
         $this->filterEngineerJobs($jobs);
 
@@ -42,7 +42,7 @@ class JobService
 
     protected function fetchJobDetails(string $jobId)
     {
-        $response = HttpUtils::getJson(self::DETAILS_URL . "/{$jobId}", [], self::HEADERS);
+        $response = HttpUtils::getJson(self::DETAILS_URL . "/{$jobId}", self::HEADERS);
         $details  = $response['data'];
 
         return $details;

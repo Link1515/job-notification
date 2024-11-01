@@ -4,12 +4,9 @@ namespace Link1515\JobNotification\Utils;
 
 class HttpUtils
 {
-    public static function get($url, $queryParams = [], $headers = []): string
+    public static function get($url, $headers = []): string
     {
-        $ch  = curl_init();
-        $url = empty($queryParams) ?
-            $url :
-            $url . '?' . http_build_query($queryParams) ;
+        $ch = curl_init();
 
         curl_setopt_array($ch, [
             CURLOPT_URL            => $url,
@@ -27,9 +24,9 @@ class HttpUtils
         return $response;
     }
 
-    public static function getJson($url, $queryParams = [], $headers = []): array
+    public static function getJson($url, $headers = []): array
     {
-        $response = self::get($url, $queryParams, $headers);
+        $response = self::get($url, $headers);
 
         $data = json_decode($response, true);
 
