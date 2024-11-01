@@ -3,19 +3,14 @@
 require_once __DIR__ . '/bootstrap.php';
 
 use Link1515\JobNotification\DB;
+use Link1515\JobNotification\MainService;
 use Link1515\JobNotification\Repositories\JobRepository;
-use Link1515\JobNotification\Services\JobService;
+use Link1515\JobNotification\Services\JobService\RemoteJobService;
 
-$jobService = new JobService();
-$ids        = $jobService->fetchRemoteJobsByKeyword('全端 前端 後端 軟體');
+$keyword       = '全端 前端 後端 軟體';
+$tableName     = 'remote_jobs';
+$jobService    = new RemoteJobService();
+$jobRepository = new JobRepository(DB::getPDO(), $tableName);
 
-$jobRepository = new JobRepository(DB::getPDO(), 'jobs');
-if ($jobRepository->count() === 0) {
-    $jobRepository->insertJobs($ids);
-} else {
-    $newIds = $jobRepository->findNewIds($ids);
-    $jobRepository->insertJobs($newIds);
-}
-
-// $result = $jobService->fetchJobDetails('8edun');
-// echo json_encode($result);
+$mainService = new MainService($keyword, $jobService, $jobRepository);
+$mainService->run();
