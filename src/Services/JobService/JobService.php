@@ -1,6 +1,6 @@
 <?php
 
-namespace Link1515\JobNotification\Services;
+namespace Link1515\JobNotification\Services\JobService;
 
 use Link1515\JobNotification\Utils\HttpUtils;
 use Link1515\JobNotification\Utils\StringUtils;
