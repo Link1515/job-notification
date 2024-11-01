@@ -26,8 +26,9 @@ class JobService
 
         $response = HttpUtils::getJson(self::LIST_URL, $queryParams, self::HEADERS);
         $jobs     = $response['data'];
+        $jobIds   = $this->getJobIds($jobs);
 
-        return $jobs;
+        return $jobIds;
     }
 
     public function fetchRemoteJobsByKeyword(string $keyword): array
@@ -49,15 +50,18 @@ class JobService
         $this->filterEngineerJobs($jobs);
         $this->filterRemoteJobs($jobs);
 
-        return array_values($jobs);
+        $jobIds = $this->getJobIds($jobs);
+
+        return $jobIds;
     }
 
     public function fetchJobsByUrl(string $url): array
     {
         $response = HttpUtils::getJson($url, [], self::HEADERS);
         $jobs     = $response['data'];
+        $jobIds   = $this->getJobIds($jobs);
 
-        return $jobs;
+        return $jobIds;
     }
 
     private function filterEngineerJobs(array &$jobs): void
@@ -79,9 +83,21 @@ class JobService
         });
     }
 
-    public function fetchJobDetails(string $detailId)
+    private function getJobIds(array $jobs): array
     {
-        $response = HttpUtils::getJson(self::DETAILS_URL . "/{$detailId}", [], self::HEADERS);
+        $jobIds = [];
+        foreach ($jobs as $job) {
+            $jobUrl    = $job['link']['job'];
+            $jobUrlArr = explode('/', $jobUrl);
+            $jobId     = array_pop($jobUrlArr);
+            $jobIds[]  = $jobId;
+        }
+        return $jobIds;
+    }
+
+    public function fetchJobDetails(string $jobId)
+    {
+        $response = HttpUtils::getJson(self::DETAILS_URL . "/{$jobId}", [], self::HEADERS);
         $details  = $response['data'];
 
         return $details;

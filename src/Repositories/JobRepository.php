@@ -32,18 +32,7 @@ class JobRepository
         $sql = <<<SQL
             CREATE TABLE IF NOT EXISTS `{$this->tableName}` (
                 id VARCHAR(255) NOT NULL,
-                name VARCHAR(255) NOT NULL,
-                industry VARCHAR(255) NOT NULL,
-                company VARCHAR(255) NOT NULL,
-                companyLink VARCHAR(255) NOT NULL,
-                address VARCHAR(255) NOT NULL,
-                landmark VARCHAR(255),
-                latitude DECIMAL(9, 6) NOT NULL,
-                longitude DECIMAL(9, 6) NOT NULL,
-                link VARCHAR(255) NOT NULL,
-                postDate TIMESTAMP NOT NULL,
-                description TEXT NOT NULL,
-                salary VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP NOT NULL,
                 CONSTRAINT job_pk PRIMARY KEY (id)
             ) ENGINE=InnoDB
             DEFAULT CHARSET=utf8mb4
@@ -53,37 +42,13 @@ class JobRepository
         $this->pdo->exec($sql);
     }
 
-    public function insertJob(Job $job): bool
-    {
-        $result = $this->pdo->prepare(
-            "INSERT INTO 
-                        `{$this->tableName}` (id, name, industry, company, companyLink, address, landmark, latitude, longitude, link, postDate, description, salary) 
-                    VALUES 
-                        (:id, :name, :industry, :company, :companyLink, :address, :landmark, :latitude, :longitude, :link, :postDate, :description, :salary)"
-        )->execute([
-            'id'          => $job->id,
-            'name'        => $job->name,
-            'industry'    => $job->industry,
-            'company'     => $job->company,
-            'companyLink' => $job->companyLink,
-            'address'     => $job->address,
-            'landmark'    => $job->landmark,
-            'latitude'    => $job->latitude,
-            'longitude'   => $job->longitude,
-            'link'        => $job->link,
-            'postDate'    => $job->postDate->format('Y-m-d'),
-            'description' => $job->description,
-            'salary'      => $job->salary,
-        ]);
-
-        return $result;
-    }
-
     public function insertJobs(array $jobs)
     {
-        $sql = "INSERT INTO `{$this->tableName}` (id, name, industry, company, companyLink, address, landmark, latitude, longitude, link, postDate, description, salary) VALUES ";
+        $sql = "INSERT INTO `{$this->tableName}` (id, created_at) VALUES ";
+        $now = new \DateTime();
+        /** @var Job $job */
         foreach ($jobs as $job) {
-            $sql .= "('{$job->id}', '{$job->name}', '{$job->industry}', '{$job->company}', '{$job->companyLink}', '{$job->address}', '{$job->landmark}', {$job->latitude}, {$job->longitude}, '{$job->link}', {$job->postDate}, '{$job->description}', '{$job->salary}'), ";
+            $sql .= "('{$job->id}', '{$now->format('Y-m-d H:i:s')}'), ";
         }
         $sql = substr($sql, 0, -2);
 

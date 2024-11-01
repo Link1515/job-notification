@@ -9,22 +9,9 @@ use Link1515\JobNotification\Services\JobService;
 
 $jobService = new JobService();
 $data       = $jobService->fetchRemoteJobsByKeyword('全端 前端 後端 軟體');
-$jobObj     = $data[0];
+echo json_encode($data);
 
-$jobRepository = new JobRepository(DB::getPDO(), 'jobs');
+// $jobRepository = new JobRepository(DB::getPDO(), 'jobs');
 
-$job = (new Job())
-    ->setId($jobObj['jobNo'])
-    ->setName($jobObj['jobName'])
-    ->setIndustry($jobObj['coIndustryDesc'])
-    ->setCompany($jobObj['custName'])
-    ->setCompanyLink($jobObj['link']['cust'])
-    ->setAddress($jobObj['jobAddrNoDesc'] . $jobObj['jobAddress'])
-    ->setLatitude($jobObj['lat'])
-    ->setLongitude($jobObj['lon'])
-    ->setLink($jobObj['link']['job'])
-    ->setPostDate(new \DateTime($jobObj['appearDate']))
-    ->setDescription('')
-    ->setSalary('');
-
-$jobRepository->insertJob($job);
+// $result = $jobService->fetchJobDetails('8edun');
+// echo json_encode($result);
