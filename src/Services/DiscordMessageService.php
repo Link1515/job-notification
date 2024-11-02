@@ -62,6 +62,7 @@ class DiscordMessageService
                 'title'       => $jobName,
                 'description' => $message,
                 'url'         => $jobLink,
+                'color'       => 16032353,
             ],
             ...$imageEmbeds
         ]);
