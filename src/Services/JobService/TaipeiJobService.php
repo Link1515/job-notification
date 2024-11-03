@@ -16,7 +16,7 @@ class TaipeiJobService extends JobService
             'page'      => 1,
             'pagesize'  => 20
         ];
-        $url = self::LIST_URL . '?' . http_build_query($queryParams) ;
+        $url = self::LIST_API_URL . '?' . http_build_query($queryParams) ;
 
         $jobIds = $this->fetchJobIdsByUrl($url);
 

@@ -18,7 +18,7 @@ class RemoteJobService extends JobService
             'remoteWork' => 1, // 完全遠端
             'searchJobs' => 1
         ];
-        $url = self::LIST_URL . '?' . http_build_query($queryParams) ;
+        $url = self::LIST_API_URL . '?' . http_build_query($queryParams) ;
 
         $jobs = $this->fetchJobsByUrl($url);
         $this->filterRemoteJobs($jobs);

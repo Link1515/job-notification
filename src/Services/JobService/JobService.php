@@ -7,9 +7,10 @@ use Link1515\JobNotification\Utils\StringUtils;
 
 abstract class JobService
 {
-    public const LIST_URL    = 'https://www.104.com.tw/jobs/search/api/jobs';
-    public const DETAILS_URL = 'https://www.104.com.tw/job/ajax/content';
-    public const HEADERS     = ['Referer: https://www.104.com.tw'];
+    public const LIST_API_URL    = 'https://www.104.com.tw/jobs/search/api/jobs';
+    public const DETAILS_API_URL = 'https://www.104.com.tw/job/ajax/content';
+    public const DETAILS_URL     = 'https://www.104.com.tw/job';
+    public const HEADERS         = ['Referer: https://www.104.com.tw'];
 
     abstract public function fetchJobIdsByKeyword(string $keyword): array;
 
