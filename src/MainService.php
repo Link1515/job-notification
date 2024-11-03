@@ -5,6 +5,7 @@ namespace Link1515\JobNotification;
 use Link1515\JobNotification\Repositories\JobRepository;
 use Link1515\JobNotification\Services\DiscordMessageService;
 use Link1515\JobNotification\Services\JobService\JobService;
+use Link1515\JobNotification\Utils\LogUtils;
 
 class MainService
 {
@@ -18,15 +19,22 @@ class MainService
 
     public function run(): void
     {
+        LogUtils::log('Fetching jobs...');
         $jobIds = $this->jobService->fetchJobIdsByKeyword($this->keyword);
 
         if ($this->jobRepository->count() === 0) {
+            LogUtils::log('Initializing jobs table...');
             $this->jobRepository->insertJobs($jobIds);
             return;
         }
 
         $newJobIds = $this->jobRepository->findNewIds($jobIds);
-        $newJobIds = array_values($newJobIds);
+        if (count($newJobIds) === 0) {
+            LogUtils::log('No new jobs found.');
+            return;
+        }
+
+        LogUtils::log('New jobs found: ' . count($newJobIds) . ', and will be sent to Discord.');
         foreach ($newJobIds as $jobId) {
             $jobDetails = $this->jobService->fetchJobDetails($jobId);
             $jobLink    = $this->jobService->getJobDetailsLink($jobId);

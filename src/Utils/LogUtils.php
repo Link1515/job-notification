@@ -1,6 +1,6 @@
 <?php
 
-namespace Link1515\RentHouseCrawler\Utils;
+namespace Link1515\JobNotification\Utils;
 
 class LogUtils
 {
