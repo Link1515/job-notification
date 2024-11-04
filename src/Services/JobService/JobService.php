@@ -45,11 +45,16 @@ abstract class JobService
 
     public function fetchJobDetails(string $jobId)
     {
-        $jobLink  = $this->getJobDetailsLink($jobId);
+        $jobLink  = $this->getJobDetailsApiLink($jobId);
         $response = HttpUtils::getJson($jobLink, self::HEADERS);
         $details  = $response['data'];
 
         return $details;
+    }
+
+    private function getJobDetailsApiLink(string $jobId): string
+    {
+        return self::DETAILS_API_URL . "/{$jobId}";
     }
 
     public function getJobDetailsLink(string $jobId): string
