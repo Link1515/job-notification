@@ -14,16 +14,21 @@ class JobService
 
     public function fetchJobIdsByKeyword(string $keyword): array
     {
+        $url    = $this->getApiUrl($keyword);
+        $jobIds = $this->fetchJobIdsByUrl($url);
+
+        return $jobIds;
+    }
+
+    private function getApiUrl($keyword): string
+    {
         $queryParams = [
             'jobsource' => 'index_s',
             'keyword'   => $keyword,
         ];
         $url = self::LIST_API_URL . '?' . http_build_query($queryParams) ;
 
-        $jobs   = $this->fetchJobsByUrl($url);
-        $jobIds = $this->getJobIds($jobs);
-
-        return $jobIds;
+        return $url;
     }
 
     protected function fetchJobsByUrl(string $url): array

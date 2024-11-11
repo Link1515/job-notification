@@ -8,6 +8,17 @@ class RemoteJobService extends JobService
 {
     public function fetchJobIdsByKeyword(string $keyword): array
     {
+        $url = $this->getApiUrl($keyword);
+
+        $jobs = $this->fetchJobsByUrl($url);
+        $this->filterRemoteJobs($jobs);
+        $jobIds = $this->getJobIds($jobs);
+
+        return $jobIds;
+    }
+
+    private function getApiUrl(string $keyword): string
+    {
         $queryParams = [
             'jobsource'  => 'joblist_search',
             'keyword'    => $keyword,
@@ -20,11 +31,7 @@ class RemoteJobService extends JobService
         ];
         $url = self::LIST_API_URL . '?' . http_build_query($queryParams) ;
 
-        $jobs = $this->fetchJobsByUrl($url);
-        $this->filterRemoteJobs($jobs);
-        $jobIds = $this->getJobIds($jobs);
-
-        return $jobIds;
+        return $url;
     }
 
     private function filterRemoteJobs(array &$jobs): void

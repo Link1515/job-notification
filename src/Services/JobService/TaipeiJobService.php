@@ -6,6 +6,14 @@ class TaipeiJobService extends JobService
 {
     public function fetchJobIdsByKeyword(string $keyword): array
     {
+        $url    = $this->getApiUrl($keyword);
+        $jobIds = $this->fetchJobIdsByUrl($url);
+
+        return $jobIds;
+    }
+
+    private function getApiUrl(string $keyword): string
+    {
         $queryParams = [
             'area'      => '6001001000,6001002000',
             'jobsource' => 'joblist_search',
@@ -18,8 +26,6 @@ class TaipeiJobService extends JobService
         ];
         $url = self::LIST_API_URL . '?' . http_build_query($queryParams) ;
 
-        $jobIds = $this->fetchJobIdsByUrl($url);
-
-        return $jobIds;
+        return $url;
     }
 }
