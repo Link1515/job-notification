@@ -5,14 +5,26 @@ namespace Link1515\JobNotification\Services\JobService;
 use Link1515\JobNotification\Utils\HttpUtils;
 use Link1515\JobNotification\Utils\StringUtils;
 
-abstract class JobService
+class JobService
 {
     public const LIST_API_URL    = 'https://www.104.com.tw/jobs/search/api/jobs';
     public const DETAILS_API_URL = 'https://www.104.com.tw/job/ajax/content';
     public const DETAILS_URL     = 'https://www.104.com.tw/job';
     public const HEADERS         = ['Referer: https://www.104.com.tw'];
 
-    abstract public function fetchJobIdsByKeyword(string $keyword): array;
+    public function fetchJobIdsByKeyword(string $keyword): array
+    {
+        $queryParams = [
+            'jobsource' => 'index_s',
+            'keyword'   => $keyword,
+        ];
+        $url = self::LIST_API_URL . '?' . http_build_query($queryParams) ;
+
+        $jobs   = $this->fetchJobsByUrl($url);
+        $jobIds = $this->getJobIds($jobs);
+
+        return $jobIds;
+    }
 
     protected function fetchJobsByUrl(string $url): array
     {
