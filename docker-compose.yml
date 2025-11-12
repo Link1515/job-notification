@@ -1,0 +1,6 @@
+services:
+  crawler:
+    container_name: job-notification-crawler
+    build: .
+    volumes:
+      - ./database:/app/database
