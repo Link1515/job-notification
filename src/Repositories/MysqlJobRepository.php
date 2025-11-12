@@ -2,9 +2,10 @@
 
 namespace Link1515\JobNotification\Repositories;
 
+use Link1515\JobNotification\Repositories\Interface\JobRepository;
 use PDO;
 
-class JobRepository
+class MysqlJobRepository implements JobRepository
 {
     private PDO $pdo;
     private string $tableName;
@@ -59,7 +60,7 @@ class JobRepository
         return $newIds;
     }
 
-    public function insertJobs(array $ids)
+    public function insertJobs(array $ids): void
     {
         if (count($ids) === 0) {
             return;

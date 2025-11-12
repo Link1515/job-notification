@@ -2,7 +2,7 @@
 
 namespace Link1515\JobNotification;
 
-use Link1515\JobNotification\Repositories\JobRepository;
+use Link1515\JobNotification\Repositories\Interface\JobRepository;
 use Link1515\JobNotification\Services\DiscordMessageService;
 use Link1515\JobNotification\Services\JobService\JobService;
 use Link1515\JobNotification\Utils\LogUtils;
