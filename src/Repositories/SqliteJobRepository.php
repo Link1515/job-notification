@@ -36,13 +36,13 @@ class SqliteJobRepository implements JobRepository
 
     public function createJobsTable(): void
     {
-        $sql = <<<SQL
+        $sql = "
             CREATE TABLE IF NOT EXISTS `{$this->tableName}` (
                 id TEXT NOT NULL,
                 created_at DATETIME NOT NULL,
                 CONSTRAINT job_pk PRIMARY KEY (id)
             );
-        SQL;
+        ";
 
         $this->pdo->exec($sql);
     }

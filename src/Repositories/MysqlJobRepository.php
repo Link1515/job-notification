@@ -22,14 +22,22 @@ class MysqlJobRepository implements JobRepository
 
     public function tableExists(): bool
     {
-        $sql    = "SHOW TABLES LIKE '{$this->tableName}'";
-        $result = $this->pdo->query($sql);
-        return $result->rowCount() > 0;
+        $sql = "SHOW TABLES LIKE '{$this->tableName}'";
+        $sql = "
+            SELECT 1
+            FROM information_schema.tables
+            WHERE table_schema = DATABASE()
+                AND table_name = :table
+            LIMIT 1
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':table' => $this->tableName]);
+        return (bool) $stmt->fetchColumn();
     }
 
     public function createJobsTable(): void
     {
-        $sql = <<<SQL
+        $sql = "
             CREATE TABLE IF NOT EXISTS `{$this->tableName}` (
                 id VARCHAR(255) NOT NULL,
                 created_at TIMESTAMP NOT NULL,
@@ -37,7 +45,7 @@ class MysqlJobRepository implements JobRepository
             ) ENGINE=InnoDB
             DEFAULT CHARSET=utf8mb4
             COLLATE=utf8mb4_unicode_ci;
-        SQL;
+        ";
 
         $this->pdo->exec($sql);
     }
@@ -51,27 +59,37 @@ class MysqlJobRepository implements JobRepository
 
     public function findNewIds(array $ids): array
     {
-        $sql        = "SELECT id FROM `{$this->tableName}` WHERE id IN ('" . implode("', '", $ids) . "')";
-        $result     = $this->pdo->query($sql);
-        $existedIds = $result->fetchAll(PDO::FETCH_COLUMN);
+        if (empty($ids)) {
+            return [];
+        }
 
-        $newIds = array_diff($ids, $existedIds);
+        $placeholders = implode(', ', array_fill(0, count($ids), '?'));
+        $sql          = "SELECT id FROM `{$this->tableName}` WHERE id IN ({$placeholders})";
+        $stmt         = $this->pdo->prepare($sql);
+        $stmt->execute($ids);
+        $existedIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+        $newIds = array_values(array_diff($ids, $existedIds));
 
         return $newIds;
     }
 
     public function insertJobs(array $ids): void
     {
-        if (count($ids) === 0) {
+        if (empty($ids)) {
             return;
         }
-        $sql = "INSERT INTO `{$this->tableName}` (id, created_at) VALUES ";
-        $now = new \DateTime();
-        foreach ($ids as $id) {
-            $sql .= "('{$id}', '{$now->format('Y-m-d H:i:s')}'), ";
-        }
-        $sql = substr($sql, 0, -2);
+        $now = (new \DateTimeImmutable())->format('Y-m-d H:i:s');
 
-        $this->pdo->exec($sql);
+        $values = [];
+        $params = [];
+        foreach ($ids as $id) {
+            $values[] = '(?, ?)';
+            $params[] = $id;
+            $params[] = $now;
+        }
+        $sql  = "INSERT INTO `{$this->tableName}` (id, created_at) VALUES " . implode(', ', $values);
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
     }
 }
