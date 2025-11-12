@@ -12,6 +12,8 @@ class JobRepositoryBase
         switch ($_ENV['DB_DRIVER']) {
             case 'mysql':
                 return new MysqlJobRepository(DB::getPDO(), $tableName);
+            case 'sqlite':
+                return new SqliteJobRepository(DB::getPDO(), $tableName);
         }
         throw new \Exception('Unknown DB driver: ' . $_ENV['DB_DRIVER']);
     }

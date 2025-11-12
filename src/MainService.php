@@ -25,6 +25,7 @@ class MainService
         if ($this->jobRepository->count() === 0) {
             LogUtils::log('Initializing jobs table...');
             $this->jobRepository->insertJobs($jobIds);
+            LogUtils::log('Done. Jobs table is ready.');
             return;
         }
 
