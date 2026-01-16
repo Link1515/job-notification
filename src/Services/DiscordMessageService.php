@@ -24,7 +24,7 @@ class DiscordMessageService
         $address     = $job['jobDetail']['addressRegion'];
         $longitude   = $job['jobDetail']['longitude'];
         $latitude    = $job['jobDetail']['latitude'];
-        $workPeriod  = $job['jobDetail']['workPeriod'];
+        $workPeriod  = $job['jobDetail']['workPeriod']['note'];
         $description = $job['jobDetail']['jobDescription'];
         $salary      = $job['jobDetail']['salary'];
         $benefits    = $job['welfare']['welfare'];
