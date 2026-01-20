@@ -29,7 +29,8 @@ class DiscordMessageService
         $salary      = $job['jobDetail']['salary'];
         $benefits    = $job['welfare']['welfare'];
 
-        $images      = $job['environmentPic']['environmentPic'];
+        // discord webhook api 限制只能 10 個 embed，文字佔 1 個，最多只能 9 張照片
+        $images      = \array_slice($job['environmentPic']['environmentPic'], 0, 9);
         $imageEmbeds = [];
         foreach ($images as $image) {
             $imageEmbeds[] = [
